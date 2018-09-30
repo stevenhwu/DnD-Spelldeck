@@ -3,7 +3,7 @@ import sys
 import textwrap
 import json
 
-MAX_TEXT_LENGTH = 600
+MAX_TEXT_LENGTH = 1000
 
 SPELLS_TRUNCATED = 0
 SPELLS_TOTAL = 0
@@ -46,7 +46,9 @@ def print_spell(name, level, school, range, time, ritual, duration, components,
 
     if material is not None:
         text = "Requires " + material + ". " + text
-
+    
+    source=None
+    source_page = None
     if source_page is not None:
         source += ' page %d' % source_page
 
