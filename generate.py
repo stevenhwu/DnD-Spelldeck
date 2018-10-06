@@ -1,9 +1,11 @@
+#!/usr/bin/python3
+
 import argparse
 import sys
 import textwrap
 import json
 
-MAX_TEXT_LENGTH = 1000
+MAX_TEXT_LENGTH = 950
 
 SPELLS_TRUNCATED = 0
 SPELLS_TOTAL = 0
@@ -25,21 +27,21 @@ with open('data/spells.json') as json_data:
     SPELLS = json.load(json_data)
 
 
-def truncate_string(string, max_len=MAX_TEXT_LENGTH):
+def truncate_string(string, source, max_len=MAX_TEXT_LENGTH):
     rv = ""
 
     for sentence in string.split(".")[:-1]:
-        if len(rv + sentence) < MAX_TEXT_LENGTH - 2:
+        if len(rv + sentence) < MAX_TEXT_LENGTH - 20:
             rv += sentence + "."
         else:
-            rv += ".."
+            rv += "...." + source
             break
 
     return rv
 
 
 def print_spell(name, level, school, range, time, ritual, duration, components,
-                material, text, source=None, source_page=None, **kwargs):
+                material, text, source=None, source_page=None, single_class=None, **kwargs):
     global SPELLS_TRUNCATED, SPELLS_TOTAL
     header = LEVEL_STRING[level].format(
         school=school.lower(), ritual='ritual' if ritual else '').strip()
@@ -47,12 +49,17 @@ def print_spell(name, level, school, range, time, ritual, duration, components,
     if material is not None:
         text = "Requires " + material + ". " + text
     
-    source=None
+    new_text = truncate_string(text, source=source)
+    
+    #print(single_class)
+    source = None
     source_page = None
-    if source_page is not None:
-        source += ' page %d' % source_page
+    
+    if single_class is not None and len(single_class) == 1:
+            source = single_class[0].capitalize() + " only"
+    #if source_page is not None:
+    #    source += ' page %d' % source_page
 
-    new_text = truncate_string(text)
 
     if new_text != text:
         SPELLS_TRUNCATED += 1
@@ -114,6 +121,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     for name, spell in get_spells(args.classes, parse_levels(args.levels), args.schools, args.names):
-        print_spell(name, **spell)
+        print_spell(name, **spell, single_class=args.classes)
 
-    print('Had to truncate %d out of %d spells at %d characters.' % (SPELLS_TRUNCATED, SPELLS_TOTAL, MAX_TEXT_LENGTH), file=sys.stderr)
+    print('Had to truncate %d out of %d spells at %d characters. Class %s' % (SPELLS_TRUNCATED, SPELLS_TOTAL, MAX_TEXT_LENGTH, args.classes), file=sys.stderr)

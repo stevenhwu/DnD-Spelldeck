@@ -2,24 +2,26 @@
 \usepackage{ifxetex}
 \usepackage{fancyhdr}
 \usepackage{background}
-\usepackage[paperheight=8.89cm,paperwidth=6.35cm,margin=0.6cm,top=22mm,bottom=10mm,headheight=1cm]{geometry}
+\usepackage[paperheight=8.89cm,paperwidth=6.35cm,margin=0.6cm,top=20mm,bottom=5mm,headheight=8mm]{geometry}
 
 \backgroundsetup{
     contents={\includegraphics[width=\paperwidth,height=\paperheight]{images/background}}
 }
+\renewcommand{\baselinestretch}{1}
 
 \ifxetex
 \usepackage{fontspec}
-\setmainfont{Mrs Eaves OT}
+% \setmainfont{Mrs Eaves OT Roman}
+\setmainfont{Source Serif Pro}
 \fi
 
 \definecolor{headercolor}{RGB}{88,23,13}
 \definecolor{linecolor}{RGB}{201,173,106}
 
 \sloppy
-\setlength{\headsep}{3mm}
+\setlength{\headsep}{1mm}
 \pagestyle{fancy}
-\chead{\scshape\scriptsize\spellheader\\[-1.8mm]\Large\color{headercolor}\mbox{\spelltitle}}
+\chead{\scshape\scriptsize\spellheader\\[-1mm]\large\color{headercolor}\mbox{\spelltitle}}
 \cfoot{\if\relax\spellsource\relax\else\scriptsize\spellsource\fi}
 \setlength{\parindent}{0pt}
 
@@ -32,33 +34,34 @@
     \def\components{#6}
     \def\spellsource{#7}
     \begin{minipage}[t][5cm][t]{\textwidth}
-    \vspace{-3mm}
+    \vspace{-1mm}
     \begin{minipage}[t]{0.49\textwidth}
-        \centering\footnotesize\scshape{\color{headercolor}Casting time}
+        \centering\scriptsize\scshape{\color{headercolor}Casting time}
 
         \casttime
 	\end{minipage}
     \hfill
     \begin{minipage}[t]{0.49\textwidth}
-        \centering\footnotesize\scshape{\color{headercolor}Range}
+        \centering\scriptsize\scshape{\color{headercolor}Range}
 
         \castrange
-	\end{minipage}\\[3mm]
+	\end{minipage}\\[2mm]
     \begin{minipage}[t]{0.49\textwidth}
-        \centering\footnotesize\scshape{\color{headercolor}Components}
+        \centering\scriptsize\scshape{\color{headercolor}Components}
 
         \components
 	\end{minipage}
     \hfill
     \begin{minipage}[t]{0.49\textwidth}
-        \centering\footnotesize\scshape{\color{headercolor}Duration}
+        \centering\scriptsize\scshape{\color{headercolor}Duration}
 
         \duration
 	\end{minipage}
-    \vspace{3mm}
+    \vspace{1mm}
     \headrule
-    \vspace{3mm}
-    \footnotesize
+    \vspace{1mm}
+%     \footnotesize
+    \scriptsize
 }{
     \end{minipage}
     \newpage
