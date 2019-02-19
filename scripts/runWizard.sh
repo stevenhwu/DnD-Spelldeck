@@ -6,8 +6,9 @@ python3 generate.py -c $class "${nameOne[@]}" > tex/spells.tex
 latexmk -xelatex -cd tex/cards.tex tex/printable.tex > /dev/null
 cp ./tex/printable.pdf "./class/${class}_${ll}.pdf"
 
-# ll=2
-# nameTwo=()
-# python3 generate.py -c $class "${nameTwo[@]}" > tex/spells.tex
-# latexmk -xelatex -cd tex/cards.tex tex/printable.tex &> /dev/null
-# cp ./tex/printable.pdf "./class/${class}_${ll}.pdf"
+ll=2
+nameTwo=()
+python3 generate.py -c $class "${nameTwo[@]}" -l $ll > tex/spells.tex
+latexmk -xelatex -cd tex/cards.tex tex/printable.tex &> /dev/null
+cp ./tex/printable.pdf "./class/${class}_${ll}.pdf"
+#34 spells PHB
