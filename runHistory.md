@@ -30,3 +30,6 @@
 ./search.py -c cleric -c bard -c druid -c fighter -c rouge -l 2 > tex/spells.tex 
 ./search.py --no-class wizard --no-class warlock --no-class paladin -l 0 -l 1 > tex/spells.tex 
 
+
+./search.py -d wizard -d warlock -d paladin  -c cleric -c bard -l 4 | less
+

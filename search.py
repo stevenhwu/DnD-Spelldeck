@@ -48,13 +48,13 @@ def print_spell(name, level, school, range, time, ritual, duration, components,
 
     if material is not None:
         text = "Requires " + material + ". " + text
-    
+
     new_text = truncate_string(text, source=source)
-    
+
     # print(classes)
     source = classes
     source_page = None
-    
+
     #if single_class is not None and len(single_class) == 1:
     #        source = single_class[0].capitalize() + " only"
     #if source_page is not None:
@@ -67,24 +67,26 @@ def print_spell(name, level, school, range, time, ritual, duration, components,
     SPELLS_TOTAL += 1
 
     print("\\begin{spell}{%s}{%s}{%s}{%s}{%s}{%s}{%s}\n\n%s\n\n\\end{spell}\n" %
-        (name, header, range, time, duration, ", ".join(components), source or '', textwrap.fill(new_text, 80)))
+          (name, header, range, time, duration, ", ".join(components), source or '', textwrap.fill(new_text, 80)))
 
 
-def get_spells(classes=None, levels=None, schools=None, names=None, duration=None):
+def get_spells(classes=None, no_classes=None, levels=None, schools=None, names=None, duration=None):
     classes = {i.lower() for i in classes} if classes is not None else None
+    no_classes = {i.lower() for i in no_classes} if no_classes is not None else None
     schools = {i.lower() for i in schools} if schools is not None else None
     names = {i.lower() for i in names} if names is not None else None
     duration = {i.lower() for i in duration} if duration is not None else None
 
     return [
         (name, spell) for name, spell in sorted(SPELLS.items(), key=lambda x: x[0]) if
-#        (classes is None or len(classes & {i.lower() for i in spell['classes']}) > 0) and
-        ( len(classes & {i.lower() for i in spell['classes']}) == 0) and
+        (classes is None or len(classes & {i.lower() for i in spell['classes']}) > 0) and
+        (no_classes is None or len(no_classes & {i.lower() for i in spell['classes']}) == 0) and
         (schools is None or spell['school'].lower() in schools) and
         (levels is None or spell['level'] in levels) and
         (duration is None or spell['duration'] in duration) and
         (names is None or name.lower() in names)
     ]
+
 
 def parse_levels(levels):
     rv = None
@@ -101,11 +103,17 @@ def parse_levels(levels):
 
     return rv
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--no-class", type=str, action='append', dest='classes',
+        "-c", "--class", type=str, action='append', dest='classes',
         help="only select spells for this class, can be used multiple times "
+             "to select multiple classes."
+    )
+    parser.add_argument(
+        "-d", "--no-class", type=str, action='append', dest='no_classes',
+        help="only select spells NOT in this class, can be used multiple times "
              "to select multiple classes."
     )
     parser.add_argument(
@@ -126,7 +134,8 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
 
-    for name, spell in get_spells(args.classes, parse_levels(args.levels), args.schools, args.names, args.duration):
+    for name, spell in get_spells(args.classes, args.no_classes,
+                                  parse_levels(args.levels), args.schools, args.names, args.duration):
         print_spell(name, **spell, single_class=args.classes)
 
     print('Had to truncate %d out of %d spells at %d characters. Class %s' % (SPELLS_TRUNCATED, SPELLS_TOTAL, MAX_TEXT_LENGTH, args.classes), file=sys.stderr)
